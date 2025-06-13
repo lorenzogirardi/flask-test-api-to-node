@@ -1,7 +1,0 @@
-kind: "Namespace"
-apiVersion: "v1"
-metadata:
-  name: "pytbak"
-  labels:
-    name: "pytbak"
-    istio-injection: enabled
