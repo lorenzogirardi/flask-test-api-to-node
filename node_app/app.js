@@ -11,6 +11,17 @@ const redisClient = new Redis({
     db: parseInt(process.env.REDIS_DB) || 0
 });
 
+redisClient.on('error', (err) => {
+    if (err.code === 'ECONNREFUSED') {
+        console.log('Redis connection refused. Check if Redis is running or accessible.');
+        // Optionally, you might want to use the logger for this, but a simple console.log is fine for suppression.
+        // logger.warn('Redis connection refused. Check if Redis is running or accessible.');
+    } else {
+        // For other errors, log them as before or re-throw if appropriate for your error handling strategy
+        logger.error('Redis client error:', err);
+    }
+});
+
 // Initialize prom-client
 const register = promClient.register;
 promClient.collectDefaultMetrics(); // Collects default Node.js metrics
