@@ -2,6 +2,7 @@ from flask import Flask, jsonify, abort, request, make_response, url_for, render
 from flask_compress import Compress
 from prometheus_flask_exporter import PrometheusMetrics
 from redis import Redis
+from redis.exceptions import ConnectionError
 import logging
 from os import getenv
 import requests
@@ -118,9 +119,13 @@ def delay(x):
 
 @app.route('/api/count')
 def count():
-    r.incr('hits')
-    counter = r.get('hits').decode('utf-8')
-    return counter
+    try:
+        r.incr('hits')
+        counter = r.get('hits').decode('utf-8')
+        return counter
+    except ConnectionError as e:
+        logging.error(f"Error connecting to Redis: {e}")
+        return make_response(jsonify({'error': 'Service temporarily unavailable', 'message': 'Could not connect to Redis.'}), 503)
 
 @app.route('/api/redisping')
 def proxy():
