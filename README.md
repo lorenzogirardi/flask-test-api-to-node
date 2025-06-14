@@ -11,13 +11,20 @@ Working most of the times (always) in Platform I'm usually play with the infrast
 The application is working with GET, POST, PUT, DELETE  
 enouth to cover most of the usages based on rest api.  
 
-Inside the docker path you can run easly as local docker  
+Inside the `node_app` directory for the Node.js application (or from the project root, adjusting paths), you can build and run it with Docker.
 
-```docker build --tag pytbak:0.1 .```  
-```docker run -t -p 5000:5000 pytbak:0.1```  
-and access on it with ```locahost:5000/api/```
+Build the Docker image (run from the project root):
+```
+docker build -t nodebak:0.1 -f node_app/Dockerfile .
+```
 
-instead if you want to run it in kubernetes ,  
+Run the Docker container:
+```
+docker run -t -p 5000:3000 nodebak:0.1
+```
+And access it via `http://localhost:5000/api/` (or your configured ingress if using Kubernetes).
+
+If you want to run it in Kubernetes,
 starting from the main folder you can  apply the kubernetes folder on your environment  
 ```kubectl apply -f kubernetes/ ```  
 
