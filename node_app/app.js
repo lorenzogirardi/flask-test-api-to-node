@@ -13,12 +13,9 @@ const redisClient = new Redis({
 
 redisClient.on('error', (err) => {
     if (err.code === 'ECONNREFUSED') {
-        console.log('Redis connection refused. Check if Redis is running or accessible.');
-        // Optionally, you might want to use the logger for this, but a simple console.log is fine for suppression.
-        // logger.warn('Redis connection refused. Check if Redis is running or accessible.');
+        // No console output for ECONNREFUSED from this handler
     } else {
-        // For other errors, log them as before or re-throw if appropriate for your error handling strategy
-        logger.error('Redis client error:', err);
+        logger.error('Redis client error:', err); // Other errors are still logged
     }
 });
 
