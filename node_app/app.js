@@ -79,7 +79,7 @@ app.use((req, res, next) => {
 // Adjust the path once the python app is removed.
 // For now, assuming 'docker/templates' is accessible relative to 'node_app'
 // Ensure index.html is served for /api/
-app.use('/api', express.static(path.join(__dirname, '..', 'docker', 'templates'), { index: 'index.html' }));
+app.use('/api', express.static(path.join(__dirname, 'api'), { index: 'index.html' }));
 
 // GET /api/get/context: Retrieve all contexts.
 app.get('/api/get/context', (req, res) => {

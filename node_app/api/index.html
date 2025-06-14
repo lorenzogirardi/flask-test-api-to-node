@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Swagger UI</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.5/swagger-ui.css">
+  <style>
+    html {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+    body {
+      margin: 0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.5/swagger-ui-bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.5/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      // Begin Swagger UI call region
+      const ui = SwaggerUIBundle({
+        spec: {
+          openapi: '3.0.0',
+          info: {
+            title: 'Context API',
+            version: '1.0.0',
+            description: 'API for managing contexts in the Node.js application'
+          },
+          components: {
+            schemas: {
+              Context: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer', format: 'int64', example: 1 },
+                  title: { type: 'string', example: 'Centos 6' },
+                  description: { type: 'string', example: 'RHEL 6 based' },
+                  done: { type: 'boolean', example: false },
+                  uri: { type: 'string', format: 'url', example: 'http://localhost:3000/api/get/context/1' }
+                },
+                required: ['id', 'title', 'done', 'uri']
+              },
+              NewContext: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string', example: 'New Context' },
+                  description: { type: 'string', example: 'Details about the new context' }
+                },
+                required: ['title']
+              },
+              UpdateContext: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string', example: 'Updated Context Title' },
+                  description: { type: 'string', example: 'Updated description' },
+                  done: { type: 'boolean', example: true }
+                }
+              }
+            }
+          },
+          paths: {
+            '/api/get/context': {
+              get: {
+                summary: 'Retrieve all contexts',
+                tags: ['Context'],
+                responses: {
+                  '200': {
+                    description: 'A list of contexts',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            context: {
+                              type: 'array',
+                              items: {
+                                $ref: '#/components/schemas/Context'
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            '/api/post/context': {
+              post: {
+                summary: 'Create a new context',
+                tags: ['Context'],
+                requestBody: {
+                  description: 'Context object to be added',
+                  required: true,
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/NewContext'
+                      }
+                    }
+                  }
+                },
+                responses: {
+                  '201': {
+                    description: 'Context created successfully',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            task: {
+                              $ref: '#/components/schemas/Context'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  '400': {
+                    description: 'Bad request (e.g., missing title)'
+                  }
+                }
+              }
+            },
+            '/api/get/context/{task_id}': {
+              get: {
+                summary: 'Retrieve a specific context by ID',
+                tags: ['Context'],
+                parameters: [
+                  {
+                    name: 'task_id',
+                    in: 'path',
+                    required: true,
+                    description: 'ID of the context to retrieve',
+                    schema: {
+                      type: 'integer',
+                      format: 'int64'
+                    }
+                  }
+                ],
+                responses: {
+                  '200': {
+                    description: 'A single context',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            task: {
+                              $ref: '#/components/schemas/Context'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  '404': {
+                    description: 'Context not found'
+                  }
+                }
+              }
+            },
+            '/api/put/context/{task_id}': {
+              put: {
+                summary: 'Update an existing context',
+                tags: ['Context'],
+                parameters: [
+                  {
+                    name: 'task_id',
+                    in: 'path',
+                    required: true,
+                    description: 'ID of the context to update',
+                    schema: {
+                      type: 'integer',
+                      format: 'int64'
+                    }
+                  }
+                ],
+                requestBody: {
+                  description: 'Context object with fields to update',
+                  required: true,
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/UpdateContext'
+                      }
+                    }
+                  }
+                },
+                responses: {
+                  '200': {
+                    description: 'Context updated successfully',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            task: {
+                              $ref: '#/components/schemas/Context'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  '400': {
+                    description: 'Bad request'
+                  },
+                  '404': {
+                    description: 'Context not found'
+                  }
+                }
+              }
+            },
+            '/api/delete/context/{task_id}': {
+              delete: {
+                summary: 'Delete a context',
+                tags: ['Context'],
+                parameters: [
+                  {
+                    name: 'task_id',
+                    in: 'path',
+                    required: true,
+                    description: 'ID of the context to delete',
+                    schema: {
+                      type: 'integer',
+                      format: 'int64'
+                    }
+                  }
+                ],
+                responses: {
+                  '200': {
+                    description: 'Context deleted successfully',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            result: { type: 'boolean', example: true }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  '404': {
+                    description: 'Context not found'
+                  }
+                }
+              }
+            }
+          }
+        },
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      });
+      // End Swagger UI call region
+      window.ui = ui;
+    };
+  </script>
+</body>
+</html>
