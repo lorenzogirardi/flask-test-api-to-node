@@ -7,7 +7,7 @@ This project is a Node.js REST API application, originally reimplemented from a 
 This project was originally implemented in Python using the Flask framework. It has been reimplemented in Node.js using the Express.js framework to achieve the same core functionalities.
 
 Key technology changes include:
--   **Backend Framework:** Flask (Python) -> Express.js (Node.js)
+-   **Backend Framework:** Flask (Python) -> Express.js (Node.js) 
 -   **Redis Client:** `redis` (Python) -> `ioredis` (Node.js)
 -   **Prometheus Metrics:** `prometheus-flask-exporter` (Python) -> `prom-client` (Node.js)
 -   **Logging:** Python's `logging` module -> `winston` (Node.js)
@@ -93,6 +93,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"title":"Ubuntu 22.04 L
 **Update a context:**
 ```bash
 curl -i -H "Content-Type: application/json" -X PUT -d '{"description":"Jammy Jellyfish"}' http://localhost:5000/api/put/context/5
+
 ```
 *(Assuming ID 5 exists; example output shows the updated context)*
 
